@@ -430,6 +430,7 @@ class OneWire
   private:
     IO_REG_TYPE bitmask;
     volatile IO_REG_TYPE *baseReg;
+    uint m_pin;
 
 #if ONEWIRE_SEARCH
     // global search state

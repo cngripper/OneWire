@@ -159,6 +159,7 @@ sample code bearing this copyright.
 
 OneWire::OneWire(uint8_t pin)
 {
+    m_pin = pin;
     pinMode(pin, INPUT);
     bitmask = PIN_TO_BITMASK(pin);
     baseReg = PIN_TO_BASEREG(pin);
@@ -198,10 +199,12 @@ uint8_t OneWire::reset(void)
     DIRECT_MODE_OUTPUT(reg, mask);  // drive output low
     delayMicroseconds(480);
     DIRECT_MODE_INPUT(reg, mask);   // allow it to float
+    pinMode(m_pin, PULLUP);  ; // enable pull-up resistor
     delayMicroseconds(70);
     r = !DIRECT_READ(reg, mask);
     interrupts();
     delayMicroseconds(410);
+    r = DIRECT_READ(reg, mask); 
   return r;
 }
 
@@ -256,6 +259,7 @@ uint8_t OneWire::read_bit(void)
 	DIRECT_WRITE_LOW(reg, mask);
 	delayMicroseconds(3);
 	DIRECT_MODE_INPUT(reg, mask);	// let pin float, pull up will raise
+  pinMode(m_pin, PULLUP);	// Enable pull-up
 	delayMicroseconds(10);
 	r = DIRECT_READ(reg, mask);
     interrupts();
